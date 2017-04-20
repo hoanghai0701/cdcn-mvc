@@ -6,7 +6,14 @@
 var express = require('express'),
 	http = require('http'), 
 	path = require('path'),
+    favicon = require('serve-favicon'),
+    errorHandler = require('errorhandler'),
+    logger = require('morgan'),
 	config = require('./config'),
+    session = require('express-session'),
+    methodOverride = require('method-override'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser')
 	app = express(),
 	MongoClient = require('mongodb').MongoClient,
 	Admin = require('./controllers/Admin'),
@@ -18,19 +25,20 @@ var express = require('express'),
 // app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/templates');
 app.set('view engine', 'hjs');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(express.cookieParser('fast-delivery-site'));
-app.use(express.session());
-app.use(app.router);
+//app.use(favicon((path.join(__dirname, 'public', 'fav.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(methodOverride());
+app.use(session({secret: "blablabloblo"}));
+//app.use(app.router);
 app.use(require('less-middleware')({ src: __dirname + '/public' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {
-  	app.use(express.errorHandler());
+  	app.use(errorHandler());
 }
 
 MongoClient.connect('mongodb://54.169.225.125/kid_locker', function(err, db) {
