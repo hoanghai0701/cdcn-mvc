@@ -1,29 +1,21 @@
-var config = {
-	local: {
-		mode: 'local',
-		port: 3000,
-		mongo: {
-			host: '127.0.0.1',
-			port: 27017
-		}
-	},
-	staging: {
-		mode: 'staging',
-		port: 4000,
-		mongo: {
-			host: '54.169.225.125',
-			port: 27017
-		}
-	},
-	production: {
-		mode: 'production',
-		port: 80,
-		mongo: {
-			host: '127.0.0.1',
-			port: 27017
-		}
-	}
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
 }
-module.exports = function(mode) {
-	return config[mode || process.argv[2] || 'local'] || config.local;
-}
+
+var port = normalizePort(process.env.PORT || '3000');
+
+module.exports = {
+    port: port
+};

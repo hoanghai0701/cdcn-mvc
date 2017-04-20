@@ -6,7 +6,7 @@
 var express = require('express'),
 	http = require('http'), 
 	path = require('path'),
-	config = require('./config')(),
+	config = require('./config'),
 	app = express(),
 	MongoClient = require('mongodb').MongoClient,
 	Admin = require('./controllers/Admin'),
@@ -61,7 +61,8 @@ MongoClient.connect('mongodb://54.169.225.125/kid_locker', function(err, db) {
 		});	
 		app.all('/', attachDB, function(req, res, next) {
 			Home.run(req, res, next);
-		});		
+		});
+
 		http.createServer(app).listen(config.port, function() {
 		  	console.log(
 		  		'Express server listening on port ' + config.port
